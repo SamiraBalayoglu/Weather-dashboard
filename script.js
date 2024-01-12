@@ -37,6 +37,11 @@ for (let i=0; i < fiveDayForecast.length; i++) {
     const forecastTemp = $('<p>').text ('Temp: ${day.main.temp} C`);
     const forecastWind = $('<p>').text ('Wind: ${day.wind.speed} kph`);
     const forecastHumidity = $('<p>').text ('Humidity: ${day.main.humidity} %`);
+
+    $('#forecast').append(cardCOl);
+    cardCol.append(forecastCard);
+    forecastCard.append
+
 }
 })
 })
@@ -64,8 +69,12 @@ function displayCurrentWeather(dCurrentWeather) {
 
 
 
-&('#search-button').on('click', funtion(e)){
+&('#search-button').on('click', funtion(e){
     e.preventDefault();
 
-    const search = $()
-}
+    const search = $('#search-button').val().trim();
+    $('#today').attr('class', 'mt-3');
+    fetchWeather(search);
+})
+
+
