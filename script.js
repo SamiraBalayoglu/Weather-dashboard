@@ -23,12 +23,21 @@ fetch(forcastURL)
 displayCurrentWeather(data.list[0]);
 
 const fiveDayForecast = dCurrentWeather.filter(function (data){
-    return data.dt_txt.includes('12');
+    return data.dt_txt.includes('12:00:00');
 
 });
 
 console.log(fiveDayForecast);
 
+for (let i=0; i < fiveDayForecast.length; i++) {
+    const day = fiveDayForecast[i];
+    const forecastCard = $('<div>').attr('class', 'card');
+    const forecastBody = $('<div>').attr('class', 'card-body');
+    const forecastTitle = $('<h5>').attr('class', 'card-title').text(dayjs(day.dt_txt).format('MM-YYYY-DD')); //Year Optional
+    const forecastTemp = $('<p>').text ('Temp: ${day.main.temp} C`);
+    const forecastWind = $('<p>').text ('Wind: ${day.wind.speed} kph`);
+    const forecastHumidity = $('<p>').text ('Humidity: ${day.main.humidity} %`);
+}
 })
 })
 };
@@ -38,7 +47,8 @@ console.log(fiveDayForecast);
 
 
 function displayCurrentWeather(dCurrentWeather) {
-    const iconUrl = ``
+    const iconUrl = `https://openweathermap.org${dCurrentWeather.weather.icon}.png` //TBC
+    const icon =$('#icon').attr(scr)
 }
 
 
