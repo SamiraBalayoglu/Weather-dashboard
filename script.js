@@ -1,58 +1,114 @@
 const APIKey = '52d087c6b7f1634addb2c0b89e781f02';
-let queryURL = 'http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=${apiKey}';
 
+function callApi(cityName) {
+    const cityGeoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${APIKey}`;
+    fetch(cityGeoUrl)
+    .then(function(response){
+        console.log(response);
+        return response.json();
+    })
+    .then(function (data) {
+        // unknown city
+        if (data.length == 0) {
+            console.log(`No geo data for the city ${cityName}`);
+            return;
+        }
+        const cityLat = data[0].lat;
+        const cityLon = data[0].lon;
 
-// fetch(queryURL)
-// .then(function(response){
-//     return response.json()
-// })
-// .then(function (data){
-//     console.log('geo data: ${data}');
-//     let latitude
-// });
+        console.log(`geo data: ${data}`);
+        console.log(`geo lat: ${data[0].lat}, lon: ${data[0].lon}`);
 
+        const cityWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&appid=${APIKey}&units=metric`;
+
+        fetch(cityWeatherUrl)
+        .then(function(response){
+            console.log(response);
+            return response.json();
+        })
+        .then(function (weatherData) {
+            // no forecast
+            if (weatherData.list.length == 0) {
+                console.log(`No forecast data for the city ${cityName}`);
+                return;
+            }
+
+            console.log(`Forecast data for the city=${cityName}&lat=${cityLat}&lon=${cityLon}`, data);
+            const temp = weatherData.list[0].main.temp;
+            const humidity = weatherData.list[0].main.humidity;
+            const wind = weatherData.list[0].wind.speed;
+            const weatherDate = weatherData.list[0].dt_txt;
+            const conditionIcon = weatherData.list[0].weather[0].icon;
+            console.log(`temp and humidity: ${temp} and ${humidity} and ${wind}`);
+
+            displayCurrentWeather({
+                cityName,
+                weatherDate,
+                temp,
+                wind,
+                humidity,
+                conditionIcon
+            });
+        });
+    });
+}
+
+function displayCurrentWeather(currentWeatherData) {
+    const iconUrl = `https://openweathermap.org/img/wn/${currentWeatherData.conditionIcon}@2x.png`;
+    const icon = $('#icon').attr('src', iconUrl);
+}
 
 // const h3El = $ ('#card-title').text(`${data[0].name} (${dayjs().format('MMMM D, YYYY')})`);
-// fetch(forcastURL)
-// .then(function(response){
-//     return response.json()
-// })
-// .then.(function (data) {
-//     console.log (data);
-//     const displayCurrentWeather= data.list;
-// displayCurrentWeather(data.list[0]);
+
 
 // const fiveDayForecast = dCurrentWeather.filter(function (data){
 //     return data.dt_txt.includes('12:00:00');
-
 // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // console.log(fiveDayForecast);
 
+// $('#forecast').empty();
+
 // for (let i=0; i < fiveDayForecast.length; i++) {
-//     const day = fiveDayForecast[i];
-//     const forecastCard = $('<div>').attr('class', 'card');
-//     const forecastBody = $('<div>').attr('class', 'card-body');
-//     const forecastTitle = $('<h5>').attr('class', 'card-title').text(dayjs(day.dt_txt).format('MM-YYYY-DD')); //Year Optional
-//     const forecastTemp = $('<p>').text ('Temp: ${day.main.temp} C`);
-//     const forecastWind = $('<p>').text ('Wind: ${day.wind.speed} kph`);
-//     const forecastHumidity = $('<p>').text ('Humidity: ${day.main.humidity} %`);
+// const day = fiveDayForecast[i];
+
+// const forecastCard = $('<div>').attr('class', 'card');
+// const forecastBody = $('<div>').attr('class', 'card-body');
+// const forecastTitle = $('<h5>').attr('class', 'card-title').text(dayjs(day.dt_txt).format('MM-YYYY-DD')); //Year Optional
+// const forecastTemp = $('<p>').text ('Temp: ${day.main.temp} C`);
+// const forecastWind = $('<p>').text ('Wind: ${day.wind.speed} kph`);
+// const forecastHumidity = $('<p>').text ('Humidity: ${day.main.humidity} %`);
 
 
-//     $('#forecast').append(cardCOl);
-//     cardCol.append(forecastCard);
-//     forecastCard.append
-
-// }
-// })
-// })
-// };
 
 
-// function displayCurrentWeather(dCurrentWeather) {
-//     const iconUrl = `https://openweathermap.org${dCurrentWeather.weather.icon}.png` //TBC
-//     const icon =$('#icon').attr(scr)
-// }
+// $('#forecast').append(cardCOl);
+// cardCol.append(forecastCard);
+// forecastCard.append(forecastCard);
+// forecastBody.append(forecastTitle,forecastIcon,forecastTemp,forecastWind,forecastHumidity);
+
+// // }
+// // })
+// // })
+// // };
+
+
+// // }
 
 
 $('#search-button').on('click', function(e) {
@@ -60,6 +116,7 @@ $('#search-button').on('click', function(e) {
 
     const searchInput = $('#search-input').val().trim();
     console.log(searchInput);
+    callApi(searchInput);
     // $('#today').attr('class', 'mt-3');
     // fetchWeather(search);
 });
