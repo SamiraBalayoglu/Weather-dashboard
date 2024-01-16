@@ -34,28 +34,57 @@ function callApi(cityName) {
             }
 
             console.log(`Forecast data for the city=${cityName}&lat=${cityLat}&lon=${cityLon}`, data);
-            const temp = weatherData.list[0].main.temp;
-            const humidity = weatherData.list[0].main.humidity;
-            const wind = weatherData.list[0].wind.speed;
-            const weatherDate = weatherData.list[0].dt_txt;
-            const conditionIcon = weatherData.list[0].weather[0].icon;
-            console.log(`temp and humidity: ${temp} and ${humidity} and ${wind}`);
 
-            displayCurrentWeather({
-                cityName,
-                weatherDate,
-                temp,
-                wind,
-                humidity,
-                conditionIcon
+            const fiveDayForecast = weatherData.list.filter(function (data){
+                return data.dt_txt.includes('12:00:00');
             });
+
+            const todayExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[0]);
+            displayCurrentWeather(cityName, todayExtractedWeatherData);
+
+            const day1ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[1]);
+            displayForecastWeather(day1ExtractedWeatherData, 1);
         });
     });
 }
 
-function displayCurrentWeather(currentWeatherData) {
+function getExtractedWeatherData(weatherData) {
+    const temp = weatherData.main.temp;
+    const humidity = weatherData.main.humidity;
+    const wind = weatherData.wind.speed;
+    const weatherDate = weatherData.dt_txt;
+    const conditionIcon = weatherData.weather[0].icon;
+    console.log(`temp and humidity: ${temp} and ${humidity} and ${wind}`);
+
+    const extractedWeatherData = {
+        weatherDate,
+        temp,
+        wind,
+        humidity,
+        conditionIcon
+    };
+
+    return extractedWeatherData;
+}
+
+function displayCurrentWeather(cityName, currentWeatherData) {
     const iconUrl = `https://openweathermap.org/img/wn/${currentWeatherData.conditionIcon}@2x.png`;
-    const icon = $('#icon').attr('src', iconUrl);
+    $('#todayIcon').attr('src', iconUrl);
+    const formattedDate = dayjs(currentWeatherData.weatherDate).format('D/MM/YYYY');
+    $('#todayCityName').text(`${cityName} (${formattedDate})`);
+    $('#todayTemp').text(`${currentWeatherData.temp}`);
+    $('#todayWind').text(`${currentWeatherData.wind}`);
+    $('#todayHumidity').text(`${currentWeatherData.humidity}`);
+}
+
+function displayForecastWeather(extractedWeatherData, dayNumber) {
+    const iconUrl = `https://openweathermap.org/img/wn/${extractedWeatherData.conditionIcon}@2x.png`;
+    $(`#day${dayNumber}Icon`).attr('src', iconUrl);
+    const formattedDate = dayjs(extractedWeatherData.weatherDate).format('D/MM/YYYY');
+    $(`#day${dayNumber}Date`).text(`${formattedDate}`);
+    $(`#day${dayNumber}Temp`).text(`${extractedWeatherData.temp}`);
+    $(`#day${dayNumber}Wind`).text(`${extractedWeatherData.wind}`);
+    $(`#day${dayNumber}Humidity`).text(`${extractedWeatherData.humidity}`);
 }
 
 // const h3El = $ ('#card-title').text(`${data[0].name} (${dayjs().format('MMMM D, YYYY')})`);
