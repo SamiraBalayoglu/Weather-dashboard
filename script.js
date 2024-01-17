@@ -44,35 +44,40 @@ function callApi(cityName) {
             });
 
             const todayExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[0]);
-            displayCurrentWeather(cityName, todayExtractedWeatherData);
+            displayCurrentConditions(cityName, todayExtractedWeatherData);
 
             const day1ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[1]);
-            displayForecastWeather(day1ExtractedWeatherData, 1);
+            displayForecast(day1ExtractedWeatherData, 1);
 
             const day2ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[2]);
-            displayForecastWeather(day2ExtractedWeatherData, 2);
+            displayForecast(day2ExtractedWeatherData, 2);
 
             const day3ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[3]);
-            displayForecastWeather(day3ExtractedWeatherData, 3);
+            displayForecast(day3ExtractedWeatherData, 3);
 
             const day4ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[4]);
-            displayForecastWeather(day4ExtractedWeatherData, 4);
+            displayForecast(day4ExtractedWeatherData, 4);
 
-            if(!searchedCities.includes(cityName)) {
-                searchedCities.push(cityName);
-                displayHistory();
-            } else {
-                console.log(`City ${cityName} is already in the search history.`);
-            }
+            addToSearchHistory(cityName);
         });
     });
 }
 
-function displayHistory() {
-    let html = '';
-    for(let i=0; i<searchedCities.length;i++) {
-        html += `<p>${searchedCities[i]}</p>`;
+function addToSearchHistory(cityName) {
+    if(!searchedCities.includes(cityName)) {
+        searchedCities.push(cityName);
+        displayHistory();
+    } else {
+        console.log(`City ${cityName} is already in the search history.`);
     }
+}
+
+function displayHistory() {
+    let html = '<ul class="list-group">';
+    for(let i=0; i<searchedCities.length;i++) {
+        html += `<li class="list-group-item list-group-item-primary">${searchedCities[i]}</li>`;
+    }
+    html += `</ul>`;
 
     $('#history').html(html);
 }
@@ -96,7 +101,7 @@ function getExtractedWeatherData(weatherData) {
     return extractedWeatherData;
 }
 
-function displayCurrentWeather(cityName, currentWeatherData) {
+function displayCurrentConditions(cityName, currentWeatherData) {
     const iconUrl = `https://openweathermap.org/img/wn/${currentWeatherData.conditionIcon}@2x.png`;
     $('#todayIcon').attr('src', iconUrl);
     const formattedDate = dayjs(currentWeatherData.weatherDate).format('D/MM/YYYY');
@@ -106,7 +111,7 @@ function displayCurrentWeather(cityName, currentWeatherData) {
     $('#todayHumidity').text(`${currentWeatherData.humidity}`);
 }
 
-function displayForecastWeather(extractedWeatherData, dayNumber) {
+function displayForecast(extractedWeatherData, dayNumber) {
     const iconUrl = `https://openweathermap.org/img/wn/${extractedWeatherData.conditionIcon}@2x.png`;
     $(`#day${dayNumber}Icon`).attr('src', iconUrl);
     const formattedDate = dayjs(extractedWeatherData.weatherDate).format('D/MM/YYYY');
@@ -116,31 +121,6 @@ function displayForecastWeather(extractedWeatherData, dayNumber) {
     $(`#day${dayNumber}Humidity`).text(`${extractedWeatherData.humidity}`);
 }
 
-
-// console.log(fiveDayForecast);
-
-// $('#forecast').empty();
-
-// for (let i=0; i < fiveDayForecast.length; i++) {
-// const day = fiveDayForecast[i];
-
-// const forecastCard = $('<div>').attr('class', 'card');
-// const forecastBody = $('<div>').attr('class', 'card-body');
-// const forecastTitle = $('<h5>').attr('class', 'card-title').text(dayjs(day.dt_txt).format('MM-YYYY-DD')); //Year Optional
-// const forecastTemp = $('<p>').text ('Temp: ${day.main.temp} C`);
-// const forecastWind = $('<p>').text ('Wind: ${day.wind.speed} kph`);
-// const forecastHumidity = $('<p>').text ('Humidity: ${day.main.humidity} %`);
-
-
-
-
-// $('#forecast').append(cardCOl);
-// cardCol.append(forecastCard);
-// forecastCard.append(forecastCard);
-// forecastBody.append(forecastTitle,forecastIcon,forecastTemp,forecastWind,forecastHumidity);
-
-
-
 $('#search-button').on('click', function(e) {
     e.preventDefault();
 
@@ -148,44 +128,3 @@ $('#search-button').on('click', function(e) {
     console.log(searchInput);
     callApi(searchInput);
 });
-
-
-//FUNCTION getWeatherData(cityName):
-// Make API request to OpenWeatherMap using cityName
-// Use the API key to authenticate the request
-// Parse the JSON response and return the weather data
-
-//FUNCTION displayCurrentConditions(weatherData):
-// Display current conditions on the webpage
-//     PRINT "City: " + weatherData.cityName
-//     PRINT "Date: " + weatherData.currentDate
-//     PRINT "Icon: " + weatherData.weatherIcon
-//     PRINT "Temperature: " + weatherData.temperature
-//     PRINT "Humidity: " + weatherData.humidity
-//     PRINT "Wind Speed: " + weatherData.windSpeed
-
-//FUNCTION displayForecast(forecastData):
-// Display 5-day forecast on the webpage
-//     FOR i FROM 1 TO 5:
-//         PRINT "Date: " + forecastData[i].date
-//         PRINT "Icon: " + forecastData[i].weatherIcon
-//         PRINT "Temperature: " + forecastData[i].temperature
-//         PRINT "Humidity: " + forecastData[i].humidity
-
-// FUNCTION addToSearchHistory(cityName):
-// Add the cityName to the search history list
-// Update the list in the local storage
-
-// FUNCTION loadSearchHistory():
-// Retrieve the search history from local storage
- // Display the list of cities on the webpage
-
-// FUNCTION handleSearchButtonClick():
-// Get the value entered in the search input field
-// Call getWeatherData with the entered city name
-// Call displayCurrentConditions and displayForecast with the obtained data
-// Call addToSearchHistory to update the search history
-
-// FUNCTION handleHistoryItemClick(cityName):
-// Call getWeatherData with the selected city name
-// Call displayCurrentConditions and displayForecast with the obtained data
