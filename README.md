@@ -29,3 +29,10 @@ The Weather Dashboard is a web application that allows users to search for the c
 2. Enter the name of the city in the search bar.
 3. Click the "Search" button to retrieve weather information.
 4. View the current weather and 5-day forecast for the searched city.
+
+## Github page
+Use the [Link](https://samirabalayoglu.github.io/Weather-dashboard/) to access the page on Github.
+
+## Home Page Screenshot
+
+![Home Page View](Homescreen.png)
