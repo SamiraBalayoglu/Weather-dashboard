@@ -1,5 +1,7 @@
 const APIKey = '52d087c6b7f1634addb2c0b89e781f02';
 
+let searchedCities = [];
+
 function callApi(cityName) {
     const cityGeoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${APIKey}`;
     fetch(cityGeoUrl)
@@ -33,6 +35,8 @@ function callApi(cityName) {
                 return;
             }
 
+            $('#weatherContainer').css('display', 'block');
+
             console.log(`Forecast data for the city=${cityName}&lat=${cityLat}&lon=${cityLon}`, data);
 
             const fiveDayForecast = weatherData.list.filter(function (data){
@@ -46,15 +50,30 @@ function callApi(cityName) {
             displayForecastWeather(day1ExtractedWeatherData, 1);
 
             const day2ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[2]);
-            displayForecastWeather(day1ExtractedWeatherData, 2);
+            displayForecastWeather(day2ExtractedWeatherData, 2);
 
             const day3ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[3]);
-            displayForecastWeather(day1ExtractedWeatherData, 3);
+            displayForecastWeather(day3ExtractedWeatherData, 3);
 
             const day4ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[4]);
-            displayForecastWeather(day1ExtractedWeatherData, 4);
+            displayForecastWeather(day4ExtractedWeatherData, 4);
+
+            // todo if city already added skip this
+            if(true) {
+                searchedCities.push(cityName);
+                displayHistory();
+            }
         });
     });
+}
+
+function displayHistory() {
+    let html = '';
+    for(let i=0; i<searchedCities.length;i++) {
+        html += `<p>${searchedCities[i]}</p>`;
+    }
+
+    $('#history').html(html);
 }
 
 function getExtractedWeatherData(weatherData) {
@@ -96,27 +115,6 @@ function displayForecastWeather(extractedWeatherData, dayNumber) {
     $(`#day${dayNumber}Humidity`).text(`${extractedWeatherData.humidity}`);
 }
 
-// const h3El = $ ('#card-title').text(`${data[0].name} (${dayjs().format('MMMM D, YYYY')})`);
-
-
-// const fiveDayForecast = dCurrentWeather.filter(function (data){
-//     return data.dt_txt.includes('12:00:00');
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // console.log(fiveDayForecast);
 
@@ -140,13 +138,6 @@ function displayForecastWeather(extractedWeatherData, dayNumber) {
 // forecastCard.append(forecastCard);
 // forecastBody.append(forecastTitle,forecastIcon,forecastTemp,forecastWind,forecastHumidity);
 
-// // }
-// // })
-// // })
-// // };
-
-
-// // }
 
 
 $('#search-button').on('click', function(e) {
@@ -155,8 +146,6 @@ $('#search-button').on('click', function(e) {
     const searchInput = $('#search-input').val().trim();
     console.log(searchInput);
     callApi(searchInput);
-    // $('#today').attr('class', 'mt-3');
-    // fetchWeather(search);
 });
 
 
