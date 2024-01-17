@@ -106,9 +106,9 @@ function displayCurrentConditions(cityName, currentWeatherData) {
     $('#todayIcon').attr('src', iconUrl);
     const formattedDate = dayjs(currentWeatherData.weatherDate).format('D/MM/YYYY');
     $('#todayCityName').text(`${cityName} (${formattedDate})`);
-    $('#todayTemp').text(`${currentWeatherData.temp}`);
-    $('#todayWind').text(`${currentWeatherData.wind}`);
-    $('#todayHumidity').text(`${currentWeatherData.humidity}`);
+    $('#todayTemp').text(`${currentWeatherData.temp} C`);
+    $('#todayWind').text(`${currentWeatherData.wind} KPH`);
+    $('#todayHumidity').text(`${currentWeatherData.humidity} %`);
 }
 
 function displayForecast(extractedWeatherData, dayNumber) {
@@ -116,9 +116,9 @@ function displayForecast(extractedWeatherData, dayNumber) {
     $(`#day${dayNumber}Icon`).attr('src', iconUrl);
     const formattedDate = dayjs(extractedWeatherData.weatherDate).format('D/MM/YYYY');
     $(`#day${dayNumber}Date`).text(`${formattedDate}`);
-    $(`#day${dayNumber}Temp`).text(`${extractedWeatherData.temp}`);
-    $(`#day${dayNumber}Wind`).text(`${extractedWeatherData.wind}`);
-    $(`#day${dayNumber}Humidity`).text(`${extractedWeatherData.humidity}`);
+    $(`#day${dayNumber}Temp`).text(`${extractedWeatherData.temp} C`);
+    $(`#day${dayNumber}Wind`).text(`${extractedWeatherData.wind} KPH`);
+    $(`#day${dayNumber}Humidity`).text(`${extractedWeatherData.humidity} %`);
 }
 
 $('#search-button').on('click', function(e) {
