@@ -58,10 +58,11 @@ function callApi(cityName) {
             const day4ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[4]);
             displayForecastWeather(day4ExtractedWeatherData, 4);
 
-            // todo if city already added skip this
-            if(true) {
+            if(!searchedCities.includes(cityName)) {
                 searchedCities.push(cityName);
                 displayHistory();
+            } else {
+                console.log(`City ${cityName} is already in the search history.`);
             }
         });
     });
