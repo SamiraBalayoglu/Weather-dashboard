@@ -44,6 +44,15 @@ function callApi(cityName) {
 
             const day1ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[1]);
             displayForecastWeather(day1ExtractedWeatherData, 1);
+
+            const day2ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[2]);
+            displayForecastWeather(day1ExtractedWeatherData, 2);
+
+            const day3ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[3]);
+            displayForecastWeather(day1ExtractedWeatherData, 3);
+
+            const day4ExtractedWeatherData = getExtractedWeatherData(fiveDayForecast[4]);
+            displayForecastWeather(day1ExtractedWeatherData, 4);
         });
     });
 }
